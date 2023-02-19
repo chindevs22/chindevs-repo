@@ -1,0 +1,231 @@
+$sectionToLessonMap = array ();
+function read_csv() {
+
+    print "READING CSV\n";
+    //file mapping from our File Manager
+	$fileName = '/home/freewaydns-dev108/cd-test-docs/lesson_materials_section.csv';
+	$file = fopen($fileName, 'r');
+
+	$dataArray = array();
+ 	$headerLine = true;
+	while (($line = fgetcsv($file)) !== FALSE) {
+
+        // check header line and if so store for the column names
+	    if($headerLine) {
+	        $headerLine = false;
+	        $mappingLine = $line;
+	        continue;
+	    }
+
+        // loop through the column values in one row
+        $count = 0;
+        $tempArray = array();
+
+        // create mapping based on header
+        foreach($line as $value) {
+			$tempArray[$mappingLine[$count++]] = $value;
+        }
+		create_course_from_csv($tempArray);
+	}
+	fclose($file);
+	print "COMPLETED CSV READING\n";
+}
+
+function generate_lesson_file_string($attachment, $course_id) {
+
+    $path2 = "{\"error\":\"\",\"path\":\"/home/freewaydns-dev108/htdocs/dev108.freewaydns.net/wp-content/uploads/course_materials/{$course_id}/{$attachment}\",\"url\":\"https://dev108.freewaydns.net/wp-content/uploads/course_materials/{$course_id}/{$attachment}\"}";
+
+    $file_data2 = json_encode(array(
+            "lesson_files" => $path2,
+            "lesson_files_label" => $attachment
+        ));
+
+   echo "THE JSON STRING";
+   echo $file_data2;
+   return "[{$file_data2}]";
+}
+
+function create_lesson_from_csv($lessonData) {
+    $wpdata['post_title'] = $lessonData['lesson_name'];
+    $wpdata['post_status'] ='publish';
+    $wpdata['post_type'] = 'stm-lessons';
+    $lesson_post_id = wp_insert_post( $wpdata );
+
+    // add section ID to the section map
+    global $sectionToLessonMap;
+
+    $sectionID = $lessonData['section_id'];
+
+    if (!array_key_exists($sectionID, $sectionToLessonMap)) {
+		echo "creating section " . $sectionID;
+// 		$sectionToLessonMap[$sectionID] = "{$lessonData['section_name']} {$lesson_post_id}";
+        $sectionToLessonMap[$sectionID] = array("{$lessonData['section_name']}", "{$lesson_post_id}");
+    } else {
+// 		 $sectionToLessonMap[$sectionID] .= " {$lesson_post_id}";
+        array_push($sectionToLessonMap[$sectionID], "{$lesson_post_id}");
+    }
+
+    if ($lessonData['lesson_type'] == 'video' ) {
+        update_post_meta($lesson_post_id, 'duration', $lessonData['duration']);
+        update_post_meta($lesson_post_id, 'type', $lessonData['lesson_type']);
+        $video_type = strtolower($lessonData['video_type']);
+        update_post_meta($lesson_post_id, 'video_type', $video_type);
+        update_post_meta($lesson_post_id, "lesson_{$video_type}_url", $lessonData['video_url']);
+    }
+    if ($lessonData['lesson_type'] == 'other') {
+         update_post_meta($lesson_post_id, 'type', 'text');
+         $file_path =  generate_lesson_file_string($lessonData['attachment'], $lessonData['course_id']);
+         update_post_meta($lesson_post_id, 'lesson_files_pack', wp_slash($file_path));
+    }
+    if ($lessonData['lesson_type'] == 'audio') {
+          update_post_meta($lesson_post_id, 'duration', $lessonData['duration']);
+          update_post_meta($lesson_post_id, 'type', 'video');
+          update_post_meta($lesson_post_id, 'video_type', 'ext_link');
+          update_post_meta($lesson_post_id, 'lesson_ext_link_url', $lessonData['audio_url']);
+    }
+}
+
+function create_course_from_csv($courseData) {
+    // Create array of Course info from CSV data
+	$wpdata['post_title'] = $courseData['title'];
+// 	$wpdata['post_content'] = $courseData['description'];
+	$wpdata['post_excerpt'] = $courseData['short_description'];
+	$wpdata['post_status'] ='publish';
+	$wpdata['post_type'] = 'stm-courses';
+
+    $curriculum_string = "";
+	$combinedArray = array();
+	$sectionString = $courseData['section'];
+	$sectionString = trim($sectionString, '[');
+    $sectionString = trim($sectionString, ']');
+    $sectionString = trim($sectionString, ' ');
+    $sectionArray = explode(",", $sectionString);
+
+    global $sectionToLessonMap;
+
+	foreach ($sectionArray as $sectionID) {
+		if ($sectionToLessonMap[$sectionID]) {
+			$combinedArray = array_merge($combinedArray, $sectionToLessonMap[$sectionID]);
+		}
+    }
+
+	echo "COMBINED";
+	print_r($combinedArray);
+	$curriculum_string = implode(",", $combinedArray);
+    echo $curriculum_string;
+	$course_post_id = wp_insert_post( $wpdata );
+	update_post_meta($course_post_id, 'price', $courseData['price_usd']);
+	update_post_meta($course_post_id, 'curriculum', $curriculum_string);
+}
+
+
+add_shortcode( 'test2', 'create_course_post' );
+
+//////////////////
+OLD CODE
+///////////////////////
+
+
+function generate_lesson_json($attachment) {
+    $file_data = json_encode(array(
+        'error' => "",
+        'path' => "/home/freewaydns-dev108/htdocs/dev108.freewaydns.net/wp-content/uploads/wpcfto_files/{$attachment}",
+        'url' => "https://dev108.freewaydns.net/wp-content/uploads/wpcfto_files/{$attachment}"
+    ));
+	print_r($file_data);
+     $lesson_json = json_encode(array(
+        'closed_tab' => true,
+        'lesson_files_label' => "{$attachment}",
+        'lesson_files' => $file_data
+     ));
+     print_r($lesson_json);
+     return "[{$lesson_json}]";
+};
+
+
+
+
+
+function test_create_lesson_text() {
+	//echo " testing just the generate lesson";
+    //$wpdata['post_title'] = 'HARDCODED TEXT LESSON ';
+    //$wpdata['post_status'] ='publish';
+    //$wpdata['post_type'] = 'stm-lessons';
+    //$lesson_post_id = wp_insert_post( $wpdata );
+    $lesson_post_id = 5159;
+    update_post_meta($lesson_post_id, 'type', 'text');
+    update_post_meta($lesson_post_id,'_wp_page_template', 'default');
+    $test_path = generate_lesson_file_string('Lesson_01.pdf', 9);
+    echo $test_path;
+    update_post_meta($lesson_post_id, 'lesson_files_pack', wp_slash($test_path));
+}
+
+function read_csv() {
+
+    print "READING CSV\n";
+    //file mapping from our File Manager
+	$fileName = '/home/freewaydns-dev108/cd-test-docs/course (5).csv';
+	$file = fopen($fileName, 'r');
+
+	$dataArray = array();
+ 	$headerLine = true;
+	while (($line = fgetcsv($file)) !== FALSE) {
+
+        // check header line and if so store for the column names
+	    if($headerLine) {
+	        $headerLine = false;
+	        $mappingLine = $line;
+	        continue;
+	    }
+
+        // loop through the column values in one row
+        $count = 0;
+        $tempArray = array();
+
+        // create mapping based on header
+        foreach($line as $value) {
+			$tempArray[$mappingLine[$count++]] = $value;
+        }
+		create_course_from_csv($tempArray);
+	}
+	fclose($file);
+	print "COMPLETED CSV READING\n";
+}
+
+function create_course_from_csv($courseData) {
+    // Create array of Course info from CSV data
+	$wpdata['post_title'] = $courseData['title'];
+	$wpdata['post_content'] = $courseData['description'];
+	$wpdata['post_excerpt'] = $courseData['short_description'];
+	$wpdata['post_status'] ='publish';
+	$wpdata['post_type'] = 'stm-courses'
+
+	$course_post_id = wp_insert_post( $wpdata );
+	update_post_meta($course_post_id, 'price', $courseData['price_usd'])
+}
+
+function create_meta($userData, $user_id) {
+    // create on a global scope
+    global $existingMetaMapping, $newMetaMapping;
+
+    foreach ($existingMetaMapping as $key => $value) {
+       update_user_meta( $user_id, $key, $userData[$value] );
+    }
+    foreach ($newMetaMapping as $key => $value) {
+        echo "results from adding " . $key . "" . add_user_meta( $user_id, $key, $userData[$value], true );
+    }
+    echo "CREATED Metadata for user " . $user_id . "\n";
+
+    // print_r (get_user_meta(12));
+}
+
+
+// old csv file paths
+	//ensure no duplicate headers in CSV files
+	read_csv("sample_questions.csv", "question");
+ 	read_csv("lesson_materials_section.csv", "lesson");
+	read_csv("same_course_material.csv", "course");
+	read_csv("users.csv", "user");
+	read_csv("user_self_assessment_3.csv", "userquiz");
+	read_csv("user_self_assessment_details.csv", "useranswers");
+	read_csv("enrol (2).csv", "enrol");
