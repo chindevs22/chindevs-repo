@@ -1,0 +1,76 @@
+<?php
+	// --------------------------------------------------------------------------------------------
+	// CREATE COURSE SECTION
+	// --------------------------------------------------------------------------------------------
+
+	// create the course
+	require_once 'helpers.php';
+	function create_course_from_csv($courseData) {
+		global $courseMGMLtoWP, $sectionToLessonMap;
+
+		// Create array of Course info from CSV data
+		$wpdata['post_title'] = $courseData['title'];
+		$wpdata['post_content'] = html_entity_decode($courseData['description']);
+		$wpdata['post_excerpt'] = $courseData['short_description'];
+		$wpdata['post_status'] ='publish';
+		$wpdata['post_type'] = 'stm-courses';
+		$course_post_id = wp_insert_post( $wpdata );
+
+		$curriculum_string = "";
+		$combinedArray = array();
+		$sectionString = $courseData['section'];
+		$sectionArray = create_array_from_string($sectionString, ",");
+
+		foreach ($sectionArray as $sectionID) {
+			if ($sectionToLessonMap[$sectionID]) {
+				$combinedArray = array_merge($combinedArray, $sectionToLessonMap[$sectionID]);
+			}
+		}
+
+		$curriculum_string = implode(",", $combinedArray);
+		$courseMGMLtoWP[$courseData['id']] = $course_post_id;
+
+		$price = $courseData['price_usd'];
+		update_post_meta($course_post_id, 'price', $price);
+		update_post_meta($course_post_id, 'curriculum', $curriculum_string);
+		update_post_meta($course_post_id, 'level', $courseData['level']);
+		update_post_meta($course_post_id, 'current_students', 0);
+		if (empty($price) || $price == 0) {
+			update_post_meta($course_post_id, 'shareware', 'on');
+		}
+		add_course_image($course_post_id, $courseData['id']); // adds the image to the course
+
+		// this appends the category as a term with the taxonomy relationship to the course ID
+
+		$category = $courseData['parent_category'];
+
+		if ($category == 'Satsang Webinars' || $category == 'Text-based Webinars') {
+			$category_arr = array("Study Format", $category);
+		} else {
+			$category_arr = array("Subject Matter", $category);
+		}
+		wp_set_object_terms($course_post_id, $category_arr, 'stm_lms_course_taxonomy', $append = true );
+	}
+
+	// add course image
+	function add_course_image($course_post_id, $course_id) {
+		$upload_dir = wp_upload_dir();
+		$upload_path = "course_materials/{$course_id}/thumbnail.jpg";
+		$filename = "thumbnail.jpg";
+		$wp_filetype = wp_check_filetype(basename($filename), null );
+		$attachment = array(
+			'post_mime_type' => $wp_filetype['type'],
+			'post_title' => sanitize_file_name($filename),
+			'post_content' => '',
+			'post_status' => 'inherit'
+		);
+
+		$attachment_id = wp_insert_attachment( $attachment, $upload_path, $course_post_id );
+		if ( ! is_wp_error( $attachment_id ) ) {
+			require_once(ABSPATH . 'wp-admin/includes/image.php');
+			$attachment_data = wp_generate_attachment_metadata( $attachment_id, $upload_path );
+			wp_update_attachment_metadata( $attachment_id, $attachment_data );
+			set_post_thumbnail( $course_post_id, $attachment_id );
+		}
+	}
+?>
