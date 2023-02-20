@@ -8,9 +8,18 @@
 	function create_course_from_csv($courseData) {
 		global $courseMGMLtoWP, $sectionToLessonMap;
 
+        $faq_description;
+        $orig_description = $courseData['description'];
+        $faq_flag = false;
+        if (strpos(html_entity_decode($orig_description), "Frequently Asked Questions")) {
+            $faq_flag = true;
+            $desc_arr = explode("Frequently Asked Questions", $orig_description);
+            $orig_description = $desc_arr[0];
+            $faq_description = $desc_arr[1];
+        }
 		// Create array of Course info from CSV data
 		$wpdata['post_title'] = $courseData['title'];
-		$wpdata['post_content'] = html_entity_decode($courseData['description']);
+		$wpdata['post_content'] = html_entity_decode($orig_description);
 		$wpdata['post_excerpt'] = $courseData['short_description'];
 		$wpdata['post_status'] ='publish';
 		$wpdata['post_type'] = 'stm-courses';
@@ -38,6 +47,11 @@
 		if (empty($price) || $price == 0) {
 			update_post_meta($course_post_id, 'shareware', 'on');
 		}
+		//append faq
+		if($faq_flag) {
+		    $faq_string = build_faq($faq_description);
+		    update_post_meta($course_post_id, 'faq', $faq_string);
+		}
 		add_course_image($course_post_id, $courseData['id']); // adds the image to the course
 
 		// this appends the category as a term with the taxonomy relationship to the course ID
@@ -51,6 +65,25 @@
 		}
 		wp_set_object_terms($course_post_id, $category_arr, 'stm_lms_course_taxonomy', $append = true );
 	}
+
+	// build faq
+    function build_faq($faq) {
+        $faq_string = "[";
+        $qna = explode("panel-title", $faq);
+
+        foreach($qna as $qa) {
+            $arr = explode("panel-body", $qa);
+            $question = trim(substr(strip_tags(html_entity_decode($arr[0])),3));
+            $answer = trim(substr(strip_tags(html_entity_decode($arr[1])),3));
+
+            if (empty($question) || empty($answer)) {
+            	continue;
+            }
+            $faq_string .= '{"question":"'.$question.'","answer":"'.$answer.'"},';
+        }
+        $faq_string = trim($faq_string, ",") . "]";
+    	return $faq_string;
+    }
 
 	// add course image
 	function add_course_image($course_post_id, $course_id) {
