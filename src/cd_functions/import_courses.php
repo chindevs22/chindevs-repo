@@ -9,17 +9,27 @@
 		global $courseMGMLtoWP, $sectionToLessonMap;
 
         $faq_description;
-        $orig_description = $courseData['description'];
+        $new_desc = html_entity_decode($courseData['description']);
         $faq_flag = false;
-        if (strpos(html_entity_decode($orig_description), "Frequently Asked Questions")) {
+        if (strpos($new_desc, "Frequently Asked Questions")) {
+			echo "<br> has faq <br>";
+			echo "course name <br>";
+			echo $courseData['title'];
             $faq_flag = true;
-            $desc_arr = explode("Frequently Asked Questions", $orig_description);
-            $orig_description = $desc_arr[0];
+            $desc_arr = explode("Frequently Asked Questions", $courseData['description']);
+			$orig_description = html_entity_decode($desc_arr[0]);
+			$new_desc = substr($orig_description, 0, strrpos($orig_description, "<br>") );
+//             $orig_description = $desc_arr[0];
             $faq_description = $desc_arr[1];
         }
+
+		echo "<br> the description being sent";
+		print_r($new_desc);
+		echo "<br>";
+
 		// Create array of Course info from CSV data
 		$wpdata['post_title'] = $courseData['title'];
-		$wpdata['post_content'] = html_entity_decode($orig_description);
+		$wpdata['post_content'] = $new_desc;
 		$wpdata['post_excerpt'] = $courseData['short_description'];
 		$wpdata['post_status'] ='publish';
 		$wpdata['post_type'] = 'stm-courses';
@@ -44,13 +54,16 @@
 		update_post_meta($course_post_id, 'curriculum', $curriculum_string);
 		update_post_meta($course_post_id, 'level', $courseData['level']);
 		update_post_meta($course_post_id, 'current_students', 0);
-		if (empty($price) || $price == 0) {
+		if (!empty($price) || $price != 0) {
 			update_post_meta($course_post_id, 'shareware', 'on');
 		}
 		//append faq
 		if($faq_flag) {
 		    $faq_string = build_faq($faq_description);
+			echo "this is the faq string ";
+			echo "<br>" . $faq_string . "<br>";
 		    update_post_meta($course_post_id, 'faq', $faq_string);
+			update_post_meta($course_post_id, '_wp_page_template', 'default');
 		}
 		add_course_image($course_post_id, $courseData['id']); // adds the image to the course
 
