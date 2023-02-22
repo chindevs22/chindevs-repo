@@ -11,6 +11,7 @@ $questionMGMLtoWP = array();
 $attemptNumberMap = array(); // userID + courseId + quizId -> attempt number for all questions
 $wpQuestionsToAnswers = array(); // wp question ID to wp array of answers
 $userMGMLtoWP = array();
+$randomEmailCounter = 50;
 $selfAssessmentToUser = array(); // self assessment id in mgml to user in mgml
 $existingMetaMapping = array (
         'billing_address_1' => 'address',

@@ -4,15 +4,17 @@
 	// --------------------------------------------------------------------------------------------
 	require_once 'helpers.php';
 	function create_user_from_csv($userData) {
-		global $userMGMLtoWP;
+		global $userMGMLtoWP, $randomEmailCounter;
 
-		// Create array of User info from CSV data
+		//  Create array of User info from CSV data
 		$wpdata['user_pass'] = "HariOm2022!";
 		$wpdata['user_login'] = $userData['first_name'];
 		$wpdata['first_name'] = $userData['first_name'];
 		$wpdata['last_name'] = $userData['last_name'];
 		$wpdata['display_name'] = $userData['first_name'];
-		$wpdata['user_email'] = $userData['email'];
+        $wpdata['user_email'] = "chindevs" . $randomEmailCounter . "@gmail.com";
+        $randomEmailCounter += 1;
+		//  $wpdata['user_email'] = $userData['email'];
 
 		if ( !username_exists($wpdata['user_login']) && !email_exists($wpdata['user_email']) ) {
 			$user_id = wp_insert_user($wpdata);
