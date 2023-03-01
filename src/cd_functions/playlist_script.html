@@ -1,35 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 <body>
+<!--Requires all videos to be in the same order in the main video and in the list
+Requires class names to be shown as "vid" and style as display-none -->
 
 <div class="container">
-
     <div class="main-video-container">
         <div class="main-video">
-            <code class="data">[protected_video url="https://www.youtube.com/watch?v=wBORIHZgrl8" service="youtube"]</code>
+            <code class="vid" >[protected_video url="https://www.youtube.com/watch?v=wBORIHZgrl8" service="youtube"]</code>
+            <code class="vid" style="display: none">[protected_video url="https://www.youtube.com/watch?v=NN1xAtpdF28" service="youtube"]</code>
+            <code class="vid" style="display: none">[protected_video url="https://www.youtube.com/watch?v=-68_MtYB6Gg" service="youtube"]</code>
         </div>
         <h3 class="main-vid-title">Our Video Title 1</h3>
+
     </div>
 
 
     <div class="video-list-container">
         <div class="list active">
             <div class="list-video">
-                <code class="data" >[protected_video url="https://www.youtube.com/watch?v=wBORIHZgrl8" service="youtube"]</code>
+                <code>[protected_video url="https://www.youtube.com/watch?v=wBORIHZgrl8" service="youtube"]</code>
             </div>
             <h3 class="list-title">Our Video Title 1 </h3>
         </div>
 
         <div class="list">
             <div class="list-video">
-                <code class="data" >[protected_video url="https://www.youtube.com/watch?v=NN1xAtpdF28" service="youtube"]</code>
+                <code>[protected_video url="https://www.youtube.com/watch?v=NN1xAtpdF28" service="youtube"]</code>
             </div>
             <h3 class="list-title">Our Video Title 2</h3>
         </div>
 
         <div class="list">
             <div class="list-video">
-                <code class="data" >[protected_video url="https://www.youtube.com/watch?v=-68_MtYB6Gg" service="youtube"]</code>
+                <code>[protected_video url="https://www.youtube.com/watch?v=-68_MtYB6Gg" service="youtube"]</code>
             </div>
             <h3 class="list-title">Our Video Title 3</h3>
         </div>
@@ -41,19 +45,23 @@
 <code>[wpcode id="85963"]</code>
 
 
+
 <script>
 let videoList = document.querySelectorAll('.video-list-container .list');
+let mainVideoList = document.querySelectorAll('.main-video-container .main-video .vid');
 
 videoList.forEach(vid =>{
    vid.onclick = () =>{
+      const index = [...vid.parentNode.children].indexOf(vid);
       videoList.forEach(remove =>{remove.classList.remove('active')});
+      mainVideoList.forEach(node =>{node.style.display = 'none'});
       vid.classList.add('active');
-	  let listVideo = vid.querySelector('.list-video').children[0];
+      let mainVid = mainVideoList[index];
+      mainVid.style.display = 'inline';
 	  let title = vid.querySelector('.list-title').innerHTML;
-	  let mainVideoEl = document.querySelector('.main-video-container .main-video');
-	  mainVideoEl.replaceChild(listVideo, mainVideoEl.children[0]);
 	  document.querySelector('.main-video-container .main-vid-title').innerHTML = title;
    };
 });
+
 
 </script>
