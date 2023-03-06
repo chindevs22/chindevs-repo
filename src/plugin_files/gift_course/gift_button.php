@@ -133,3 +133,13 @@ if ( ! $is_affiliate ) :
 	</div>
 	<?php
 endif;
+
+
+
+add_action( 'stm_lms_buy_button_end', array( $this, 'add_enterprise_button' ), 10, 1 );
+
+function add_enterprise_button( $course_id ) {
+	if ( ! empty( $course_price ) ) {
+		STM_LMS_Templates::show_lms_template( 'gift_courses/buy', compact( 'course_id', 'course_price' ) );
+	}
+}
