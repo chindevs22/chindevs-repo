@@ -1,4 +1,3 @@
-//.masterstudy-lms-learning-management-system/_core/assets/js/gift-course.js
 "use strict";
 
 (function ($) {
@@ -7,6 +6,7 @@
   $(document).ready(function () {
     var $price_btn = $('.add-to-cart');
     var group_ids = [];
+
 
 	$body.on('click', '.add-to-cart', function (e) {
 		console.log("adding to cart!");
@@ -32,11 +32,10 @@
           $this.addClass('loading');
         },
         complete: function complete(data) {
-			console.log(data);
-			console.log("data");
+		  console.log(data);
+		  console.log("data");
           data = data['responseJSON'];
           $this.removeClass('loading');
-
           if (data.redirect) {
             window.location.replace(data.cart_url);
           } else {
@@ -73,6 +72,7 @@
       emails.push(email);
       $gc_email.val('').removeClass('invalid valid');
       listEmails();
+	 calculatePrice();
 	  disableButton();
     });
 
@@ -87,6 +87,11 @@
     });
   });
 
+ function calculatePrice() {
+	 var $price_btn = $('.add-to-cart');
+	 var price = $price_btn.data('price');
+	 $price_btn.find('span').html(stm_lms_price_format(price * emails.length));
+  }
   function disableButton() {
 	  var $price_btn = $('.add-to-cart');
 	  console.log("in disable");

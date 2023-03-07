@@ -5,7 +5,7 @@
  * @var $course_id
  */
 $groups = STM_LMS_Enterprise_Courses::stm_lms_get_enterprise_groups( true );
-$price  = STM_LMS_Enterprise_Courses::get_enterprise_price( $course_id );
+$price  = STM_LMS_Course::get_course_price( $course_id );
 $limit = 10;
 $user    = STM_LMS_User::get_current_user();
 $user_id = $user['id'];
@@ -26,7 +26,7 @@ $user_id = $user['id'];
 	<a href="#"
 		data-course-id="<?php echo intval( $course_id ); ?>"
 		class="btn btn-default add-to-cart disabled"
-		data-enterprise-price="<?php echo esc_attr( $price ); ?>">
+		data-price="<?php echo esc_attr( $price ); ?>">
 		<?php
 		printf(
 			/* translators: %s Price */
