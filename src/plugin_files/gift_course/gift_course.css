@@ -109,7 +109,7 @@
     min-height:auto;
     text-indent:-999px
 }
-.stm-lms-modal-gift-course .actions .loading span,.stm-lms-modal-gift-course .actions.no-groups{
+/* .stm-lms-modal-gift-course .actions .loading span,.stm-lms-modal-gift-course .actions.no-groups{
     display:none
 }
 .stm_lms_select_group__list{
@@ -118,8 +118,8 @@
 .stm_lms_select_group__list h4{
     margin-bottom:5px;
     font-weight:500
-}
-.stm_lms_select_group__list .stm_lms_select_group,.stm_lms_select_group__list .stm_lms_selected_group{
+} */
+/* .stm_lms_select_group__list .stm_lms_select_group,.stm_lms_select_group__list .stm_lms_selected_group{
     position:relative;
     margin:0 0 15px;
     background-color:#f1f1f1;
@@ -156,7 +156,7 @@
     height:9px;
     font-size:9px;
     color:#fff
-}
+} */
 .stm_lms_popup_create_group .stm_lms_popup_create_group__inner,.stm_lms_select_group__list .stm_lms_selected_group i{
     display:none
 }
@@ -246,9 +246,9 @@
 .stm_lms_popup_create_group.active .stm_lms_popup_create_group__inner{
     display:block
 }
-.stm_lms_popup_create_group.active .create_group{
+/* .stm_lms_popup_create_group.active .create_group{
     display:none
-}
+} */
 .stm_lms_popup_create_group.loading{
     display:block;
     margin:20px 0 0;

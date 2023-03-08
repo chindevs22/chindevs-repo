@@ -1,3 +1,5 @@
+// we completely deleted the enterprise version of assets/js/enterprise-course.js
+
 "use strict";
 
 (function ($) {
@@ -26,7 +28,7 @@
           action: 'stm_lms_add_to_cart_gc',
           emails: emails,
           course_id: $this.data('course-id'),
-          nonce: stm_lms_nonces['stm_lms_add_to_cart_enterprise']
+          //nonce: stm_lms_nonces['stm_lms_add_to_cart_enterprise']
         },
         beforeSend: function beforeSend() {
           $this.addClass('loading');
@@ -55,6 +57,15 @@
       if (validEmail(email)) $this.removeClass('invalid').addClass('valid');
       if (!validEmail(email)) $this.removeClass('valid').addClass('invalid');
       if (!email.length) $this.removeClass('invalid valid');
+    });
+
+	 $body.on('click', '.create_emails', function (e) {
+      e.preventDefault();
+      $('.stm_lms_popup_create_group').toggleClass('active');
+
+      if ($('.stm_lms_popup_create_group__inner').find('.gc-emails').children().length < 2) {
+        $('.stm_lms_popup_create_group__inner').find('.heading_font').children().removeClass('warning');
+      }
     });
 
     $body.on('click', '.add_email_gc', function () {

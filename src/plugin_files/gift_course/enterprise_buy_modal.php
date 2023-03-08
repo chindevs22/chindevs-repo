@@ -1,10 +1,8 @@
-//masterstudy-lms-learning-management-system-pro/stm-lms-templates/gift_courses/enterprise-buy-modal.php
-// the file that generates the modal
 <?php
 /**
  * @var $course_id
  */
-$groups = STM_LMS_Enterprise_Courses::stm_lms_get_enterprise_groups( true );
+//$groups = STM_LMS_Enterprise_Courses::stm_lms_get_enterprise_groups( true );
 $price  = STM_LMS_Course::get_course_price( $course_id );
 $limit = 10;
 $user    = STM_LMS_User::get_current_user();
@@ -22,7 +20,7 @@ $user_id = $user['id'];
 	?>
 </div>
 
-<div class="actions has-groups'">
+<div class="actions has-groups">
 	<a href="#"
 		data-course-id="<?php echo intval( $course_id ); ?>"
 		class="btn btn-default add-to-cart disabled"
@@ -36,7 +34,7 @@ $user_id = $user['id'];
 		?>
 	</a>
 
-	<a href="#" class="create_group"><?php esc_html_e( 'Add a Group', 'masterstudy-lms-learning-management-system-pro' ); ?></a>
+	<a href="#" class="create_emails"><?php esc_html_e( 'Add Emails', 'masterstudy-lms-learning-management-system-pro' ); ?></a>
 </div>
 
 
