@@ -8,9 +8,8 @@
 // 	);
 // }
 
-
 add_action( 'wp_ajax_stm_lms_add_to_cart_gc', 'add_to_cart_gc' );
-add_filter( 'stm_lms_before_create_order', 'stm_lms_before_create_order' );
+add_filter( 'stm_lms_before_create_order', 'stm_lms_before_create_order', 100, 2 );
 add_action( 'stm_lms_woocommerce_order_approved', 'stm_lms_woocommerce_order_approved' );
 
 function get_price( $course_id ) {
@@ -20,12 +19,12 @@ function get_price( $course_id ) {
 //todo add back mail function
 // from enterprise main.php
 function create_group_users( $emails ) {
-	$userList = array();
+	$userIds = array();
 	foreach ( $emails as $email ) {
 		$user = get_user_by( 'email', $email );
 
 		if ( $user ) {
-			array_push($userList, $user);
+			array_push($userIds, $user->ID);
 			continue;
 		}
 
@@ -39,9 +38,9 @@ function create_group_users( $emails ) {
 		$wp_user = new WP_User($user_id);
 		//Set the role of this user to subscriber.
 		$wp_user->set_role('subscriber');
-		array_push($userList, $wp_user);
+		array_push($userIds, $wp_user->ID);
 	}
-	return $userList;
+	return $userIds;
 }
 
 //  on the existing action where woocomerce approves order
@@ -54,7 +53,7 @@ function stm_lms_woocommerce_order_approved( $course_data ) {
 		echo "here inside woocommerce order approved";
 		/* Get Group Members */
 		$group_id = intval( $course_data['gift_course_id'] );
-		$emails = array("usercreatedbygifting@gmail.com");
+		$emails = array("giftuser@a.bom");
 		$users    = create_group_users( $emails );
 
 		if ( ! empty( $users ) ) {
@@ -205,6 +204,11 @@ function woo_cart_group_name( $title, $cart_item, $cart_item_key ) {
 		$title .= $sub_title;
 	}
 	return $title;
+}
+
+add_filter( 'stm_lms_accept_order', 'stm_lms_accept_order' );
+function stm_lms_accept_order() {
+	return false;
 }
 
 ?>
