@@ -169,17 +169,17 @@ require_once 'cd_functions/import_user_progress.php';
 require_once 'cd_functions/import_publications.php';
 require_once 'cd_functions/registration_form_api.php';
 require_once 'cd_functions/product_shortcodes.php';
-
+require_once 'cd_functions/gift_courses.php';
 
 function create_course_data() {
     read_csv("questions.csv", "question");
-    read_csv("lesson_test.csv", "lesson");
+    read_csv("lesson_combined.csv", "lesson");
     read_csv("course_materials.csv", "course");
     read_csv("users.csv", "user");
     read_csv("user_self_assessment.csv", "userquiz");
     read_csv("user_self_assessment_details.csv", "useranswers");
     read_csv("enrol.csv", "enrol");
-	//read_csv("publications.csv", "publications");
+	read_csv("publications.csv", "publications");
 }
 
 function read_csv($file_name, $type) {
@@ -247,7 +247,64 @@ function hide_complete_button() {
 add_action('wp_head', 'submit_form_js');
 add_shortcode('shortcodefeedback', 'hide_complete_button'); // required on lesson page
 
+
+function get_product_description_shortcode( $atts ) {
+    $atts = shortcode_atts( array(
+        'id' => '',
+    ), $atts, 'get_product_description' );
+
+    $product_id = absint( $atts['id'] );
+    $product = wc_get_product( $product_id );
+
+    if ( $product ) {
+        return $product->get_description();
+    }
+}
+add_shortcode( 'get_product_description', 'get_product_description_shortcode' );
+
+function get_product_name_shortcode( $atts ) {
+    $atts = shortcode_atts( array(
+        'id' => '',
+    ), $atts, 'get_product_name' );
+
+    $product_id = absint( $atts['id'] );
+    $product = wc_get_product( $product_id );
+
+
+    if ( $product ) {
+			return '<div class="name">' . $product->get_title() . '</div>';
+//         return $product->get_title();
+    }
+}
+add_shortcode( 'get_product_name', 'get_product_name_shortcode' );
+
+function get_product_shortdesc_shortcode( $atts ) {
+    $atts = shortcode_atts( array(
+        'id' => '',
+    ), $atts, 'get_product_name' );
+
+    $product_id = absint( $atts['id'] );
+    $product = wc_get_product( $product_id );
+
+    if ( $product ) {
+        return $product->get_short_description();
+    }
+}
+add_shortcode( 'get_product_shortdesc', 'get_product_shortdesc_shortcode' );
+
+function my_theme_enqueue_styles() {
+    wp_enqueue_style( 'my_theme_css', get_template_directory_uri() . '/cd_themes/css/style.css' );
+}
+add_action( 'wp_enqueue_scripts', 'my_theme_enqueue_styles' );
+
+
+function ms_change_single_course_button_text( $text ) {
+    return 'New Button Text';
+}
+add_filter( 'ms_single_course_button_text', 'ms_change_single_course_button_text' );
+
 // add_shortcode( 'test-functions', 'create_country_options' );
 // add_action('wp_head', 'update_registration_form');
-//add_shortcode( 'test-functions', 'create_course_data' );
 add_shortcode( 'test-functions', 'create_course_data' );
+
+
