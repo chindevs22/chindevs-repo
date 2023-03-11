@@ -65,7 +65,9 @@
 		    update_post_meta($course_post_id, 'faq', $faq_string);
 			update_post_meta($course_post_id, '_wp_page_template', 'default');
 		}
-		add_course_image($course_post_id, $courseData['id']); // adds the image to the course
+
+		//TODO: uncomment this when we actually have images
+		//add_course_image($course_post_id, $courseData['id']); // adds the image to the course
 
 		// this appends the category as a term with the taxonomy relationship to the course ID
 
