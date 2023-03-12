@@ -247,56 +247,10 @@ function hide_complete_button() {
 add_action('wp_head', 'submit_form_js');
 add_shortcode('shortcodefeedback', 'hide_complete_button'); // required on lesson page
 
-
-function get_product_description_shortcode( $atts ) {
-    $atts = shortcode_atts( array(
-        'id' => '',
-    ), $atts, 'get_product_description' );
-
-    $product_id = absint( $atts['id'] );
-    $product = wc_get_product( $product_id );
-
-    if ( $product ) {
-        return $product->get_description();
-    }
-}
-add_shortcode( 'get_product_description', 'get_product_description_shortcode' );
-
-function get_product_name_shortcode( $atts ) {
-    $atts = shortcode_atts( array(
-        'id' => '',
-    ), $atts, 'get_product_name' );
-
-    $product_id = absint( $atts['id'] );
-    $product = wc_get_product( $product_id );
-
-
-    if ( $product ) {
-			return '<div class="name">' . $product->get_title() . '</div>';
-//         return $product->get_title();
-    }
-}
-add_shortcode( 'get_product_name', 'get_product_name_shortcode' );
-
-function get_product_shortdesc_shortcode( $atts ) {
-    $atts = shortcode_atts( array(
-        'id' => '',
-    ), $atts, 'get_product_name' );
-
-    $product_id = absint( $atts['id'] );
-    $product = wc_get_product( $product_id );
-
-    if ( $product ) {
-        return $product->get_short_description();
-    }
-}
-add_shortcode( 'get_product_shortdesc', 'get_product_shortdesc_shortcode' );
-
 function my_theme_enqueue_styles() {
     wp_enqueue_style( 'my_theme_css', get_template_directory_uri() . '/cd_themes/css/style.css' );
 }
 add_action( 'wp_enqueue_scripts', 'my_theme_enqueue_styles' );
-
 
 function ms_change_single_course_button_text( $text ) {
     return 'New Button Text';

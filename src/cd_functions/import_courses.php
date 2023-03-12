@@ -49,14 +49,18 @@
 		$curriculum_string = implode(",", $combinedArray);
 		$courseMGMLtoWP[$courseData['id']] = $course_post_id;
 
+        if(empty($curriculum_string) || strlen($curriculum_string) == 0) {
+            $curriculum_string = "Sample Section, 5552";
+        }
+
 		$price = $courseData['price_usd'];
 		update_post_meta($course_post_id, 'price', $price);
 		update_post_meta($course_post_id, 'curriculum', $curriculum_string);
 		update_post_meta($course_post_id, 'level', $courseData['level']);
 		update_post_meta($course_post_id, 'current_students', 0);
-		if (!empty($price) || $price != 0) {
-			update_post_meta($course_post_id, 'shareware', 'on');
-		}
+// 		if (!empty($price) || $price != 0) {
+// 			update_post_meta($course_post_id, 'shareware', 'on');
+// 		}
 		//append faq
 		if($faq_flag) {
 		    $faq_string = build_faq($faq_description);
