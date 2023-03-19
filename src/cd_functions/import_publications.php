@@ -2,11 +2,13 @@
 	// product is a post
 	require_once 'helpers.php';
 	function create_publications_from_csv($productData) {
+
 		$wpdata['post_title'] = $productData['title'];
 		$wpdata['post_excerpt'] = html_entity_decode($productData['description']);
 		$wpdata['post_content']  = html_entity_decode($productData['description']);
 		$wpdata['post_status'] ='publish';
 		$wpdata['post_type'] = 'product';
+
 		$product_post_id = wp_insert_post( $wpdata );
 
 		// add product metadata
@@ -16,11 +18,13 @@
 		update_post_meta($product_post_id, '_stock_status', 'instock');
 		update_post_meta($product_post_id, '_stock',  $productData['quantity']);
 		update_post_meta($product_post_id, '_regular_price', $prod_price);
+		update_post_meta($product_post_id, '_price', $prod_price);
 		update_post_meta($product_post_id, '_featured', $productData['featured_product'] == 1 ? 'yes' : 'no');
 		if ($productData['discount_flag'] == 1) {
 			$percent_off = $prod_price * $productData['discounted_price']/100;
 			$sale_price = round($prod_price - $percent_off);
 			update_post_meta($product_post_id, '_sale_price', $sale_price);
+			update_post_meta($product_post_id, '_price', $sale_price);
 		}
 		update_post_meta($product_post_id, '_weight', $productData['weight']/1000);
 
@@ -51,7 +55,7 @@
 		}
 		wp_set_object_terms($product_post_id, $wp_category_int, $taxonomy, $append = true );
 
-		// Set the the product attributes for language and author -----------------------------------------
+// 		// Set the the product attributes for language and author -----------------------------------------
 
 		$extra_attributes = json_decode($productData['variable_filed'], true);
 		$count = 0;

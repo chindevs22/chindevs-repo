@@ -160,6 +160,7 @@ if ( is_admin() ) {
 // --------------------------------------------------------------------------------------------
 //
 //
+use \Elementor\Plugin;
 
 require_once 'cd_functions/import_questions.php';
 require_once 'cd_functions/import_lessons.php';
