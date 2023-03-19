@@ -1,3 +1,5 @@
+//masterstudy-lms-learning-management-system-pro/addons/email_manager/main.php
+//code for setting up the emails
 <?php
 require_once STM_LMS_PRO_ADDONS . '/scorm/db.php';
 
@@ -84,24 +86,22 @@ class STM_LMS_Email_Manager {
 			'assignment'  => esc_html__( 'Assignment', 'masterstudy-lms-learning-management-system-pro' ),
 		);
 
-        // added course ID as a var to the template
 		$emails = array(
 			'stm_lms_course_added'                 => array(
 				'section' => 'instructors',
-				'notice'  => esc_html__( 'Send an email to the admin when the instructor has added their course', 'masterstudy-lms-learning-management-system-pro' ),
+				'notice'  => esc_html__( 'Course Created From FE (To SuperAdmin)', 'masterstudy-lms-learning-management-system-pro' ),
 				'subject' => esc_html__( 'Course added', 'masterstudy-lms-learning-management-system-pro' ),
-				'message' => esc_html__( 'Course {{course_title}} with id {{course_id}} {{action}} by instructor, your ({{user_login}}). Please review this information from the admin Dashboard', 'masterstudy-lms-learning-management-system-pro' ),
+				'message' => esc_html__( 'Course {{course_title}} {{action}} by instructor, your ({{user_login}}). Please review this information from the admin Dashboard', 'masterstudy-lms-learning-management-system-pro' ),
 				'vars'    => array(
 					'action'       => esc_html__( 'Added or updated action made by instructor', 'masterstudy-lms-learning-management-system-pro' ),
 					'user_login'   => esc_html__( 'Instructor login', 'masterstudy-lms-learning-management-system-pro' ),
 					'course_title' => esc_html__( 'Course name', 'masterstudy-lms-learning-management-system-pro' ),
-					'course_id' => esc_html__( 'Course id', 'masterstudy-lms-learning-management-system-pro' ),
 				),
 			),
 			'stm_lms_course_published'             => array(
 				'section' => 'instructors',
 				'notice'  => esc_html__(
-					'Send an email to the instructor when the course is published',
+					'Course Pending -> Publish (To Instructor)',
 					'masterstudy-lms-learning-management-system-pro'
 				),
 				'subject' => esc_html__(
@@ -115,6 +115,24 @@ class STM_LMS_Email_Manager {
 				'vars'    => array(
 					'course_title' => esc_html__(
 						'Course Title',
+						'masterstudy-lms-learning-management-system-pro'
+					),
+				),
+			),
+			'stm_lms_course_created_for_instructor'    => array(
+				'section' => 'instructors',
+				'notice'  => esc_html__(
+					'Course Created (To Instructor)',
+					'masterstudy-lms-learning-management-system-pro'
+				),
+				'subject' => esc_html__(
+					'You have created a course!',
+					'masterstudy-lms-learning-management-system-pro'
+				),
+				'message' => 'You have created {{course_title}} and it is now available to students.',
+				'vars'    => array(
+					'course_title' => esc_html__(
+						'Course title',
 						'masterstudy-lms-learning-management-system-pro'
 					),
 				),

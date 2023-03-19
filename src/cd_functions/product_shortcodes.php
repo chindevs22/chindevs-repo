@@ -1,37 +1,57 @@
 <?php
-function get_product_description( $product_id ) {
+
+function get_product_description_shortcode( $product_id ) {
+ 	if (!$product_id) {
+		return "No Product ID attribute for Product Description";
+	}
     $product = wc_get_product( $product_id );
 
     if ( $product ) {
-        return do_shortcode($product->get_description());
+        return  $product->get_description();
     }
 }
 
 function get_product_reviews( $product_id ) {
-	$args = array ('post_id' => $product_id);
-	$comments = get_comments( $args );
 
-    return wp_list_comments( array( 'callback' => 'woocommerce_comments' ), $comments);
+	$args = array(
+	   'status' => 'approve',
+	   'post_id' => $product_id,
+	   'type' => 'review',
+	);
+
+	$comments_query = new WP_Comment_Query;
+	$comments = $comments_query->query( $args );
+	$review = '';
+	if ( $comments ) {
+	   foreach ( $comments as $comment ) {
+		  $review .= '<p>' . $comment->comment_content . '</p>'; // Output the review content
+		  $review .= '<p>By: ' . $comment->comment_author . '</p>'; // Output the author of the review
+		  $review .= '<p>Date: ' . $comment->comment_date . '</p>'; // Output the date of the review
+	   }
+	} else {
+	   $review = 'No reviews found for this product.';
+	}
+	return $review;
 }
 
 function get_product_free_video_shortcode( $product_id ) {
+	if (!$product_id) {
+		return "No Product ID attribute for Free Video";
+	}
     $product = wc_get_product( $product_id );
 
 	$video_link = $product->get_meta('video');
 
 	$video_data = do_shortcode("[embedyt]".$video_link."[/embedyt]");
     if ( $product ) {
-        return "<div style='width: 50%;'>" . $video_data . "</div>";
+        return $video_data;
     }
 }
-add_shortcode( 'get_product_free_video', 'get_product_free_video_shortcode' );
 
-function get_product_name_shortcode( $atts ) {
-    $atts = shortcode_atts( array(
-        'id' => '',
-    ), $atts, 'get_product_name' );
-
-    $product_id = absint( $atts['id'] );
+function get_product_name_shortcode( $product_id ) {
+    if (!$product_id) {
+		return "No Product ID attribute for Product Name";
+	}
     $product = wc_get_product( $product_id );
 
 
@@ -40,16 +60,17 @@ function get_product_name_shortcode( $atts ) {
 //         return $product->get_title();
     }
 }
-add_shortcode( 'get_product_name', 'get_product_name_shortcode' );
 
 function get_product_shortdesc_shortcode( $product_id ) {
-    $product = wc_get_product( $product_id );
+	if (!$product_id) {
+		return "No Product ID attribute for Product Short Description";
+	}
 
+    $product = wc_get_product( $product_id );
     if ( $product ) {
         return $product->get_short_description();
     }
 }
-add_shortcode( 'get_product_shortdesc', 'get_product_shortdesc_shortcode' );
 
 function create_elementor_template($atts) {
 	$atts = shortcode_atts(array(
@@ -63,25 +84,34 @@ function create_elementor_template($atts) {
 	if (!$template_id) {
 		return '';
 	}
-	$args = array(
-		'post_type' => 'elementor_library',
-		'p' => $template_id,
-	);
-	$query = new WP_Query($args);
-	if (!$query->have_posts()) {
-		return '';
-	}
-	$query->the_post();
-	$content = get_the_content();
-	wp_reset_postdata();
-	$content = str_replace('[get_product_shortdesc]', get_product_shortdesc_shortcode($product_id), $content);
-	$content = str_replace('[get_product_free_video]', get_product_free_video_shortcode($product_id), $content);
-// 	$content = str_replace('[get_product_name]', get_product_name_shortcode($product_id), $content);
-	$content = str_replace('[get_product_description]', get_product_description($product_id), $content);
-	$content = str_replace('[reviews]', get_product_reviews($product_id), $content);
-	$content = str_replace('[product]', do_shortcode('[products ids="' . $product_id . '"]'), $content);
 
-	return do_shortcode($content);
+	// Get the Elementor template content
+	$template_content = \Elementor\Plugin::$instance->frontend->get_builder_content($template_id);
+	$template_content = do_shortcode( $template_content ); // a b
+
+	// Process shortcodes inside the template content
+	$description_content = get_product_description_shortcode($product_id);
+
+	$new_content = preg_replace_callback('/\[get_product_description\s*.*?\]/', function($matches)  use ( $description_content ) {
+		return $description_content;
+	}, $template_content);
+
+	$video_content =  get_product_free_video_shortcode($product_id);
+	$new_content = preg_replace_callback('/\[get_product_free_video\s*.*?\]/', function($matches)  use ( $video_content ) {
+		return $video_content;
+	}, $new_content);
+
+	$product_content =  do_shortcode('[product id="' . $product_id . '" class="my-product"]');
+	$new_content = preg_replace_callback('/\[the_product\s*.*?\]/', function($matches)  use ( $product_content ) {
+		return $product_content;
+	}, $new_content);
+
+	$reviews_content = get_product_reviews($product_id);
+	$new_content = preg_replace_callback('/\[the_reviews\s*.*?\]/', function($matches)  use ( $reviews_content ) {
+		return $reviews_content;
+	}, $new_content);
+
+	return $new_content;
 }
 
 add_shortcode('elementor_template', 'create_elementor_template');
