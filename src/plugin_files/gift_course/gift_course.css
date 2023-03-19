@@ -157,7 +157,7 @@
     font-size:9px;
     color:#fff
 } */
-.stm_lms_popup_create_group .stm_lms_popup_create_group__inner,.stm_lms_select_group__list .stm_lms_selected_group i{
+.stm_lms_popup_add_users .stm_lms_popup_add_users__inner,.stm_lms_select_group__list .stm_lms_selected_group i{
     display:none
 }
 .stm_lms_select_group__list .stm_lms_select_group.active,.stm_lms_select_group__list .stm_lms_selected_group.active{
@@ -178,32 +178,32 @@
 .have-groups a.btn.btn-default,a.btn.btn-default.add-to-cart{
     background-color:#385bce
 }
-.stm_lms_popup_create_group{
+.stm_lms_popup_add_users{
     margin:30px 0 0;
     transition:.3s ease
 }
-.stm_lms_popup_create_group .stm_lms_popup_create_group__inner a.btn.btn-default.btn-add-group{
+.stm_lms_popup_add_users .stm_lms_popup_add_users__inner a.btn.btn-default.btn-add-group{
     background-color:#385bce
 }
-.stm_lms_popup_create_group .stm_lms_popup_create_group__inner label{
+.stm_lms_popup_add_users .stm_lms_popup_add_users__inner label{
     position:relative;
     display:block
 }
-.stm_lms_popup_create_group .stm_lms_popup_create_group__inner label span{
+.stm_lms_popup_add_users .stm_lms_popup_add_users__inner label span{
     display:block;
     margin-bottom:5px
 }
-.stm_lms_popup_create_group .stm_lms_popup_create_group__inner label span span{
+.stm_lms_popup_add_users .stm_lms_popup_add_users__inner label span span{
     display:inline-block;
     vertical-align:top;
     float:right;
     font-size:13px;
     color:#aaa
 }
-.stm_lms_popup_create_group .stm_lms_popup_create_group__inner label span span.warning{
+.stm_lms_popup_add_users .stm_lms_popup_add_users__inner label span span.warning{
     color:#f00909
 }
-.stm_lms_popup_create_group .stm_lms_popup_create_group__inner label .add_email_gc{
+.stm_lms_popup_add_users .stm_lms_popup_add_users__inner label .add_email_gc{
     position:absolute;
     bottom:0;
     right:0;
@@ -224,46 +224,46 @@
     transition:.3s ease;
     cursor:pointer
 }
-.stm_lms_popup_create_group .stm_lms_popup_create_group__inner label .form-control{
+.stm_lms_popup_add_users .stm_lms_popup_add_users__inner label .form-control{
     background-color:#fff;
     border-color:#fff;
     height:35px
 }
-.stm_lms_popup_create_group .stm_lms_popup_create_group__inner label .form-control.invalid{
+.stm_lms_popup_add_users .stm_lms_popup_add_users__inner label .form-control.invalid{
     border-color:#f00909
 }
-.stm_lms_popup_create_group .stm_lms_popup_create_group__inner label .form-control.valid{
+.stm_lms_popup_add_users .stm_lms_popup_add_users__inner label .form-control.valid{
     border-color:#17d292
 }
-.stm_lms_popup_create_group .stm_lms_popup_create_group__inner label .form-control.valid+.add_email_gc{
+.stm_lms_popup_add_users .stm_lms_popup_add_users__inner label .form-control.valid+.add_email_gc{
     visibility:visible;
     opacity:1
 }
-.stm_lms_popup_create_group.active{
+.stm_lms_popup_add_users.active{
     padding:30px;
     background-color:#eef1f7
 }
-.stm_lms_popup_create_group.active .stm_lms_popup_create_group__inner{
+.stm_lms_popup_add_users.active .stm_lms_popup_add_users__inner{
     display:block
 }
-/* .stm_lms_popup_create_group.active .create_group{
+/* .stm_lms_popup_add_users.active .add_users{
     display:none
 } */
-.stm_lms_popup_create_group.loading{
+.stm_lms_popup_add_users.loading{
     display:block;
     margin:20px 0 0;
     visibility:visible;
     font-size:inherit
 }
-.stm_lms_popup_create_group.loading:before{
+.stm_lms_popup_add_users.loading:before{
     top:50%;
     margin-top:-10px;
     z-index:99
 }
-.stm_lms_popup_create_group.loading>*{
+.stm_lms_popup_add_users.loading>*{
     opacity:.4
 }
-.stm_lms_popup_create_group .gc-emails .gc-emails-container{
+.stm_lms_popup_add_users .gc-emails .gc-emails-container{
     display:inline-block;
     vertical-align:top;
     margin:15px 15px 0 0;
@@ -275,10 +275,10 @@
     opacity:.7;
     transition:.3s ease
 }
-.stm_lms_popup_create_group .gc-emails .gc-emails-container:hover{
+.stm_lms_popup_add_users .gc-emails .gc-emails-container:hover{
     opacity:1
 }
-.stm_lms_popup_create_group .gc-emails .lnricons-cross{
+.stm_lms_popup_add_users .gc-emails .lnricons-cross{
     position:relative;
     top:2px;
     color:#f00909;
@@ -286,10 +286,10 @@
     font-size:14px;
     cursor:pointer
 }
-.stm_lms_popup_create_group .gc-emails .lnricons-cross::before{
+.stm_lms_popup_add_users .gc-emails .lnricons-cross::before{
     content:""
 }
-.stm_lms_popup_create_group .btn-add-group{
+.stm_lms_popup_add_users .btn-add-group{
     display:inline-block;
     vertical-align:top;
     margin:25px 0 0;
@@ -302,7 +302,7 @@
     opacity:.5;
     cursor:not-allowed
 }
-.stm_lms_popup_create_group .btn-add-group.activex{
+.stm_lms_popup_add_users .btn-add-group.activex{
     cursor:pointer;
     opacity:1
 }
