@@ -40,7 +40,7 @@ function get_product_free_video_shortcode( $product_id ) {
 	}
     $product = wc_get_product( $product_id );
 
-	$video_link = $product->get_meta('video');
+	$video_link = get_post_meta($product_id, 'video', true);
 
 	$video_data = do_shortcode("[embedyt]".$video_link."[/embedyt]");
     if ( $product ) {
