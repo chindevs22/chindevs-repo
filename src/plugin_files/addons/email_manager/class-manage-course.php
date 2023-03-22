@@ -628,33 +628,24 @@ class STM_LMS_Manage_Course {
 				array('course_title' => $data['title'])
 			);
 
-			//send email to all students  NOT WORKING
+			//send email to all students
 			$student_users = stm_lms_get_course_users( $data['post_id'], array( 'user_id' ) );
-			error_log("Trying to send email to all students");
-			error_log( print_r( $users, true ) );
-			error_log("ME");
-			error_log( print_r ($user, true));
 
 			foreach ( $student_users as $suser ) {
-				$user_id   = $suser['user_id'];
-				if ($user['id'] === $user_id) {
-					error_log("not sending mail to instructor again");
+				$student_user_id = $suser['user_id'];
+				if ( $student_user_id == $user['id']) { //skip sending to instructor
 					continue;
 				}
-				$user_info = get_userdata( $user_id );
-				error_log("user info");
-				error_log( print_r( $user_info, true ) );
-
-				STM_LMS_Helpers::send_email(
+				$student_user_info = get_userdata( $student_user_id );
+				STM_LMS_Mails::send_email(
 					$subject,
 					$message,
-					$user_info->user_email,
+					$student_user_info->user_email,
 					array(),
 					'stm_lms_course_updated_for_user',
 					array('course_title' => $data['title'])
 				);
 			}
-
 		}
 
 		//End ChinDevs code

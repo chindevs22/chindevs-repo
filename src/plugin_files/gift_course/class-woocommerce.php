@@ -386,7 +386,7 @@ class STM_LMS_Woocommerce {
 	public function delete_course( $course_id, $post ) {
 		$allowed_types = array(
 			'stm-courses',
-			'stm-course-bundles',
+			'stm-course-bundles',add_to_cart
 		);
 
 		if ( ! in_array( $post->post_type, $allowed_types ) ) { // phpcs:ignore WordPress.PHP.StrictInArray.MissingTrueStrict

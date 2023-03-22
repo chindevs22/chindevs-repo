@@ -1,5 +1,4 @@
 <?php
-
 // if ( class_exists( 'STM_LMS_Woocommerce_Courses_Admin' ) && STM_LMS_Cart::woocommerce_checkout_enabled() ) {
 // 	new STM_LMS_Woocommerce_Courses_Admin(
 // 		'gift_course',
@@ -11,6 +10,16 @@
 add_action( 'wp_ajax_stm_lms_add_to_cart_gc', 'add_to_cart_gc' );
 add_filter( 'stm_lms_before_create_order', 'stm_lms_before_create_order', 100, 2 );
 add_action( 'stm_lms_woocommerce_order_approved', 'stm_lms_woocommerce_order_approved' );
+add_action( 'stm_lms_buy_button_end', 'add_gift_course_button', 10, 1 );
+
+function add_gift_course_button( $course_id ) {
+	$price = get_price( $course_id );
+	error_log("inside gift course button what is the price");
+	error_log($price);
+	if ( ! empty( $price ) ) {
+		STM_LMS_Templates::show_lms_template( 'gift_courses/buy', compact( 'course_id', 'price' ) );
+	}
+}
 
 function get_price( $course_id ) {
 	return get_post_meta( $course_id, 'price', true );
