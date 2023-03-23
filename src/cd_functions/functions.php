@@ -171,6 +171,23 @@ require_once 'cd_functions/import_publications.php';
 require_once 'cd_functions/registration_form_api.php';
 require_once 'cd_functions/product_shortcodes.php';
 require_once 'cd_functions/gift_courses.php';
+require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+
+function add_column_to_user_cart() {
+	global $wpdb;
+	$table_name = $wpdb->prefix . 'stm_lms_user_cart';
+	$column_name = 'gift_course';
+
+	// Check if the column exists
+	$column_exists = $wpdb->get_var( "SHOW COLUMNS FROM $table_name LIKE '$column_name'" );
+
+	// If the column does not exist, add it
+	if ( ! $column_exists ) {
+		error_log("Adding Gift Course Column");
+		$wpdb->query( "ALTER TABLE $table_name ADD $column_name FLOAT DEFAULT '0' NULL" );
+	}
+}
+add_action('admin_init', 'add_column_to_user_cart');
 
 function create_course_data() {
     read_csv("questions.csv", "question");
@@ -263,3 +280,13 @@ add_filter( 'ms_single_course_button_text', 'ms_change_single_course_button_text
 add_shortcode( 'test-functions', 'create_course_data' );
 
 
+
+
+[23-Mar-2023 02:05:30 UTC]
+WordPress database error You have an error in your SQL syntax;
+check the manual that corresponds to your MySQL server version for the right syntax to
+use near ''wp_stm_lms_user_cart'
+WHERE user_id = 27 AND item_id = 17304 AND gift_course = '
+at line 1 for query SELECT 'user_cart_id,gift_course' FROM 'wp_stm_lms_user_cart' WHERE user_id = 27 AND item_id = 17304 AND gift_course = 17743 
+
+made by do_action('wp_ajax_stm_lms_add_to_cart_gc'), WP_Hook->do_action, WP_Hook->apply_filters, add_to_cart_gc, check_gift_course_in_cart
