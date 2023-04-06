@@ -1,5 +1,5 @@
 // we completely deleted the enterprise version of assets/js/enterprise-course.js
-
+//masterstudy-lms-learning-management-system/_core/assets/js/gift-course.js
 "use strict";
 
 (function ($) {
@@ -15,8 +15,8 @@
 		alert("hi");
 		console.log(emails);
       e.preventDefault();
-	  if ($('.stm_lms_popup_create_group__inner').find('.group-emails').children().length < 2) {
-        $('.stm_lms_popup_create_group__inner').find('.heading_font').children().removeClass('warning');
+	  if ($('.stm_lms_popup_add_users__inner').find('.group-emails').children().length < 2) {
+        $('.stm_lms_popup_add_users__inner').find('.heading_font').children().removeClass('warning');
       }
       var $this = $(this);
       if (!emails.length) return false;
@@ -61,10 +61,10 @@
 
 	 $body.on('click', '.create_emails', function (e) {
       e.preventDefault();
-      $('.stm_lms_popup_create_group').toggleClass('active');
+      $('.stm_lms_popup_add_users').toggleClass('active');
 
-      if ($('.stm_lms_popup_create_group__inner').find('.gc-emails').children().length < 2) {
-        $('.stm_lms_popup_create_group__inner').find('.heading_font').children().removeClass('warning');
+      if ($('.stm_lms_popup_add_users__inner').find('.gc-emails').children().length < 2) {
+        $('.stm_lms_popup_add_users__inner').find('.heading_font').children().removeClass('warning');
       }
     });
 
@@ -73,11 +73,11 @@
       var email = $gc_email.val();
       if (!validEmail(email) || emails.includes(email)) return true;
 
-      if ($(this).parents('.stm_lms_popup_create_group__inner').find('.gc-emails').children().length > 1) {
-        $(this).parents('.stm_lms_popup_create_group__inner').find('.heading_font').children().addClass('warning');
+      if ($(this).parents('.stm_lms_popup_add_users__inner').find('.gc-emails').children().length > 1) {
+        $(this).parents('.stm_lms_popup_add_users__inner').find('.heading_font').children().addClass('warning');
         return true;
       } else {
-        $(this).parents('.stm_lms_popup_create_group__inner').find('.heading_font').children().removeClass('warning');
+        $(this).parents('.stm_lms_popup_add_users__inner').find('.heading_font').children().removeClass('warning');
       }
 
       emails.push(email);

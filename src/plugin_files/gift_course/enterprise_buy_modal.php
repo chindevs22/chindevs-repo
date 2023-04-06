@@ -38,9 +38,9 @@ $user_id = $user['id'];
 </div>
 
 
-<div class="stm_lms_popup_create_group">
+<div class="stm_lms_popup_add_users">
 
-	<div class="stm_lms_popup_create_group__inner">
+	<div class="stm_lms_popup_add_users__inner">
 
 		<div class="row">
 			<div class="col-sm-6">
