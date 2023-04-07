@@ -1,5 +1,6 @@
 // we completely deleted the enterprise version of assets/js/enterprise-course.js
 //masterstudy-lms-learning-management-system/_core/assets/js/gift-course.js
+
 "use strict";
 
 (function ($) {
@@ -59,19 +60,10 @@
       if (!email.length) $this.removeClass('invalid valid');
     });
 
-	 $body.on('click', '.create_emails', function (e) {
-      e.preventDefault();
-      $('.stm_lms_popup_add_users').toggleClass('active');
-
-      if ($('.stm_lms_popup_add_users__inner').find('.gc-emails').children().length < 2) {
-        $('.stm_lms_popup_add_users__inner').find('.heading_font').children().removeClass('warning');
-      }
-    });
-
     $body.on('click', '.add_email_gc', function () {
 		console.log("adding an email");
       var email = $gc_email.val();
-      if (!validEmail(email) || emails.includes(email)) return true;
+      if (!validEmail(email) || emails.includes(email) || emails.length == 1) return true;
 
       if ($(this).parents('.stm_lms_popup_add_users__inner').find('.gc-emails').children().length > 1) {
         $(this).parents('.stm_lms_popup_add_users__inner').find('.heading_font').children().addClass('warning');
@@ -81,19 +73,21 @@
       }
 
       emails.push(email);
+	  $gc_email.val('').addClass('disable');
       $gc_email.val('').removeClass('invalid valid');
       listEmails();
-	 calculatePrice();
+	  calculatePrice();
 	  disableButton();
+
     });
 
     $body.on('click', '.lnricons-cross', function () {
-		console.log("clicking a cross");
       var email = $(this).parent().find('span').text();
       var index = emails.indexOf(email);
       emails.splice(index, 1);
       $(this).parent().remove();
-
+	  $gc_email.val('').removeClass('disable');
+	  calculatePrice();
       disableButton();
     });
   });
@@ -103,6 +97,7 @@
 	 var price = $price_btn.data('price');
 	 $price_btn.find('span').html(stm_lms_price_format(price * emails.length));
   }
+
   function disableButton() {
 	  var $price_btn = $('.add-to-cart');
 	  console.log("in disable");

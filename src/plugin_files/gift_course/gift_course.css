@@ -179,17 +179,20 @@
 }
 .have-groups a.btn.btn-default,a.btn.btn-default.add-to-cart{
     background-color:#385bce
+	float: right;
 }
 .stm_lms_popup_add_users{
     margin:30px 0 0;
     transition:.3s ease
 }
 .stm_lms_popup_add_users .stm_lms_popup_add_users__inner a.btn.btn-default.btn-add-group{
+	padding-top: 10px;
     background-color:#385bce
 }
 .stm_lms_popup_add_users .stm_lms_popup_add_users__inner label{
     position:relative;
-    display:block
+    display:block;
+	padding-bottom: 20px;
 }
 .stm_lms_popup_add_users .stm_lms_popup_add_users__inner label span{
     display:block;
@@ -226,6 +229,11 @@
     transition:.3s ease;
     cursor:pointer
 }
+
+.stm_lms_popup_add_users .stm_lms_popup_add_users__inner label .form-control.disable{
+   	display: none;
+}
+
 .stm_lms_popup_add_users .stm_lms_popup_add_users__inner label .form-control{
     background-color:#fff;
     border-color:#fff;
@@ -241,11 +249,11 @@
     visibility:visible;
     opacity:1
 }
-.stm_lms_popup_add_users.active{
+.stm_lms_popup_add_users {
     padding:30px;
     background-color:#eef1f7
 }
-.stm_lms_popup_add_users.active .stm_lms_popup_add_users__inner{
+.stm_lms_popup_add_users .stm_lms_popup_add_users__inner{
     display:block
 }
 /* .stm_lms_popup_add_users.active .add_users{

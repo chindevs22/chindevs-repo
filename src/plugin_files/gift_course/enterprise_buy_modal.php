@@ -1,10 +1,12 @@
+// masterstudy-lms-learning-management-system-pro/stm-lms-templates/gift_courses/enterprise-buy-modal.php
+
 <?php
 /**
  * @var $course_id
  */
 //$groups = STM_LMS_Enterprise_Courses::stm_lms_get_enterprise_groups( true );
 $price  = STM_LMS_Course::get_course_price( $course_id );
-$limit = 10;
+$limit = 1;
 $user    = STM_LMS_User::get_current_user();
 $user_id = $user['id'];
 ?>
@@ -21,24 +23,8 @@ $user_id = $user['id'];
 </div>
 
 <div class="actions has-groups">
-	<a href="#"
-		data-course-id="<?php echo intval( $course_id ); ?>"
-		class="btn btn-default add-to-cart disabled"
-		data-price="<?php echo esc_attr( $price ); ?>">
-		<?php
-		printf(
-			/* translators: %s Price */
-			esc_html__( 'Add to cart %s', 'masterstudy-lms-learning-management-system-pro' ),
-			'<span>' . STM_LMS_Helpers::display_price( '0' ) . '</span>' // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		);
-		?>
-	</a>
 
-	<a href="#" class="create_emails"><?php esc_html_e( 'Add Emails', 'masterstudy-lms-learning-management-system-pro' ); ?></a>
-</div>
-
-
-<div class="stm_lms_popup_add_users">
+	<div class="stm_lms_popup_add_users">
 
 	<div class="stm_lms_popup_add_users__inner">
 
@@ -49,12 +35,12 @@ $user_id = $user['id'];
 						<?php
 						printf(
 							/* translators: %s Group Limit */
-							__( 'Add users: <span>(Max : %s)</span>', 'masterstudy-lms-learning-management-system-pro' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+							__( 'Add User\'s Email: ', 'masterstudy-lms-learning-management-system-pro' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 							$limit // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 						);
 						?>
 					</span>
-					<input type="text" placeholder="<?php esc_attr_e( 'Enter member E-mail...', 'masterstudy-lms-learning-management-system-pro' ); ?>" class="form-control" name="gc_emails" id="gc_email"/>
+					<input type="text" placeholder="<?php esc_attr_e( 'Enter member e-mail...', 'masterstudy-lms-learning-management-system-pro' ); ?>" class="form-control" name="gc_emails" id="gc_email"/>
 					<span class="add_email_gc"><i class="lnricons-arrow-return"></i></span>
 				</label>
 			</div>
@@ -66,6 +52,21 @@ $user_id = $user['id'];
 			</div>
 		</div>
 
+		<a href="#"
+            data-course-id="<?php echo intval( $course_id ); ?>"
+            class="btn btn-default add-to-cart disabled"
+            data-price="<?php echo esc_attr( $price ); ?>">
+            <?php
+            printf(
+                /* translators: %s Price */
+                esc_html__( 'Add to cart %s', 'masterstudy-lms-learning-management-system-pro' ),
+                '<span>' . STM_LMS_Helpers::display_price( '0' ) . '</span>' // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+            );
+            ?>
+	    </a>
 	</div>
 
 </div>
+</div>
+
+

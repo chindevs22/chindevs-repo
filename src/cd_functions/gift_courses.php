@@ -191,6 +191,7 @@ function check_gift_course_in_cart( $user_id, $item_id, $gc_id, $fields = array(
 
 function add_to_cart_gc() {
 
+	error_log("adding to cart gc");
 	if ( ! is_user_logged_in() || empty( $_GET['course_id'] ) ) {
 		die;
 	}
@@ -210,12 +211,12 @@ function add_to_cart_gc() {
 
 	error_log("The emails returned on add to cart");
 	error_log(print_r($emails, true));
-	error_log(print_r($_GET['emails'], true));
 	// create a post with the email
 	$gc_email_id = wp_insert_post(
 		array(
 			'post_title' => sanitize_text_field("Gift Course for ". $emails),
 			'post_type'  => 'stm-gc-emails',
+			'post_status' => 'publish'
 		)
 	);
 	update_post_meta( $gc_email_id, 'emails', $emails );
@@ -248,8 +249,6 @@ function add_to_cart_gc() {
 		if ( is_null( WC()->cart ) ) {
 			wc_load_cart();
 		}
-		//ADD THIS ONE BACK IN
-      	//WC()->cart->add_to_cart( $product_id, 1, 0, array(), array( 'enterprise_id' => '112233' ) );
 		WC()->cart->add_to_cart( $product_id, 1, 0, array(), array( 'gift_course_id' => $gc_email_id ) );
 
 		$r['text']     = esc_html__( 'Go to Cart', 'masterstudy-lms-learning-management-system-pro' );
